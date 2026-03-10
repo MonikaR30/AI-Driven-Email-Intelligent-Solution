@@ -1,0 +1,9 @@
+.env
+*.env
+credentials.json
+credential.json
+application.properties
+email_analysis_cache.json
+*.db
+*.mv.db
+*.trace.db
