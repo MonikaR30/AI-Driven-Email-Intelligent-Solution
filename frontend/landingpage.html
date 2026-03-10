@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Email Intelligence</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #7dd3fc;
+  --secondary: #a78bfa;
+  --accent: #c084fc;
+  --dark: #0f172a;
+  --darker: #020617;
+  --light: #f8fafc;
+  --gray: #64748b;
+  --gradient-start: #bfdbfe;
+  --gradient-end: #c084fc;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--darker);
+  color: var(--light);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Animated gradient background */
+.gradient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 25%, #a78bfa 60%, #c084fc 100%);
+}
+
+.gradient-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 20% 50%, rgba(125, 211, 252, 0.3) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(167, 139, 250, 0.3) 0%, transparent 50%),
+              radial-gradient(circle at 40% 20%, rgba(192, 132, 252, 0.2) 0%, transparent 50%);
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(10%, 10%) rotate(180deg); }
+}
+
+/* Floating particles */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(125, 211, 252, 0.6);
+  border-radius: 50%;
+  animation: float 20s infinite;
+}
+
+.particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; animation-duration: 15s; }
+.particle:nth-child(2) { left: 30%; top: 60%; animation-delay: 2s; animation-duration: 18s; }
+.particle:nth-child(3) { left: 50%; top: 30%; animation-delay: 4s; animation-duration: 20s; }
+.particle:nth-child(4) { left: 70%; top: 70%; animation-delay: 1s; animation-duration: 16s; }
+.particle:nth-child(5) { left: 90%; top: 40%; animation-delay: 3s; animation-duration: 19s; }
+.particle:nth-child(6) { left: 20%; top: 80%; animation-delay: 5s; animation-duration: 17s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+  50% { transform: translateY(-100px) scale(1.5); opacity: 1; }
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 5%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+  box-shadow: 0 2px 20px rgba(125, 211, 252, 0.1);
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-box img {
+  width: 70px;
+  height: 70px;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: contain;
+}
+
+.nav-btn {
+  padding: 0.6rem 1.5rem;
+  background: linear-gradient(135deg, #3b82f6, #a78bfa);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(125, 211, 252, 0.3);
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(125, 211, 252, 0.5);
+}
+
+/* Hero Section */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  padding: 9rem 5% 5rem;
+  min-height: 100vh;
+}
+
+.hero-left {
+  animation: fadeInLeft 1s ease;
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.hero-left h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+}
+
+.hero-left p {
+  font-size: 1.1rem;
+  color: #475569;
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2rem;
+  background: linear-gradient(135deg, #3b82f6, #a78bfa);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.4s ease;
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.hero-btn:hover::before {
+  left: 100%;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 35px rgba(59, 130, 246, 0.45);
+}
+
+.hero-right {
+  position: relative;
+  animation: fadeInRight 1s ease;
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.hero-right img {
+  width: 100%;
+  max-width: 500px;
+  filter: drop-shadow(0 15px 50px rgba(125, 211, 252, 0.3));
+  animation: float-image 6s ease-in-out infinite;
+}
+
+@keyframes float-image {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Features Section */
+.features {
+  padding: 6rem 5%;
+  text-align: center;
+}
+
+.features h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #1e293b;
+  animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 16px;
+  padding: 2rem 1.75rem;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease;
+}
+
+.feature-card:nth-child(1) { animation-delay: 0.1s; }
+.feature-card:nth-child(2) { animation-delay: 0.2s; }
+.feature-card:nth-child(3) { animation-delay: 0.3s; }
+.feature-card:nth-child(4) { animation-delay: 0.4s; }
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.1), rgba(167, 139, 250, 0.1));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(125, 211, 252, 0.5);
+  box-shadow: 0 12px 40px rgba(125, 211, 252, 0.25);
+}
+
+.feature-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1.25rem;
+  filter: drop-shadow(0 4px 12px rgba(125, 211, 252, 0.3));
+  transition: transform 0.4s ease;
+}
+
+.feature-card:hover img {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.feature-card h3 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+
+.feature-card p {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* About Section */
+.about {
+  padding: 5rem 5%;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(167, 139, 250, 0.2);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.about h2 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 1.25rem;
+  color: #1e293b;
+}
+
+.about p {
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 1.05rem;
+  color: #475569;
+  line-height: 1.8;
+}
+
+/* Footer */
+footer {
+  padding: 2.5rem 5%;
+  text-align: center;
+  border-top: 1px solid rgba(167, 139, 250, 0.2);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+footer p {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 8rem;
+  }
+  
+  .hero-left h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-right {
+    order: -1;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 4%;
+  }
+  
+  .logo-box {
+    font-size: 1.1rem;
+  }
+  
+  .hero-left h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-left p {
+    font-size: 1.1rem;
+  }
+  
+  .features h2 {
+    font-size: 2.2rem;
+  }
+  
+  .about h2 {
+    font-size: 2rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Animated Background -->
+<div class="gradient-bg"></div>
+
+<!-- Floating Particles -->
+<div class="particles">
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+  <div class="particle"></div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo-box">
+    <img src="images/AIEmail LOGO.png" alt="AI Email Intelligence Logo">
+    <span>AI Email Intelligence</span>
+  </div>
+  <a href="login.html" class="nav-btn">Login / Signup</a>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-left">
+    <h1>AI Email Intelligence System</h1>
+    <p>Transform your inbox with next-generation AI. Smart summaries, intelligent prioritization, and automated workflows—all powered by cutting-edge natural language processing.</p>
+    <a href="login.html" class="hero-btn">
+      Get Started
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+  <div class="hero-right">
+    <img src="images/Mail sent-amico.png" alt="Email AI Illustration">
+  </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="features">
+  <h2>Supercharge Your Inbox</h2>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="AI Summary">
+      <h3>AI-Powered Summaries</h3>
+      <p>Instantly condense lengthy emails into clear, actionable insights using advanced natural language processing.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/3024/3024553.png" alt="Priority Detection">
+      <h3>Smart Priority Detection</h3>
+      <p>Automatically identify and highlight urgent messages so you never miss what matters most.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Task Extraction">
+      <h3>Intelligent Task Extraction</h3>
+      <p>Extract action items, deadlines, and follow-ups from your emails effortlessly.</p>
+    </div>
+
+    <div class="feature-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/1055/1055646.png" alt="Smart Reply">
+      <h3>Context-Aware Replies</h3>
+      <p>Generate professional, contextually appropriate email responses in seconds with AI assistance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SECTION -->
+<section class="about">
+  <h2>Redefining Email Management</h2>
+  <p>
+    The AI Email Intelligence System leverages state-of-the-art machine learning and natural language processing 
+    to revolutionize how you manage communications. By analyzing patterns, extracting insights, and automating 
+    routine tasks, we help professionals reclaim hours each week and focus on what truly matters.
+  </p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 AI Email Intelligence Solution | Developed by Monika Rajendiran</p>
+</footer>
+
+</body>
+</html>
