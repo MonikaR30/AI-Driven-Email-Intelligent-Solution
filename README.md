@@ -22,6 +22,43 @@ Built using a microservices architecture with a Spring Boot backend and a Flask-
 
 ## 🏗️ System Architecture
 
+### Data Flow
+
+User → Frontend  
+→ Spring Boot Backend (API Layer)  
+→ Gmail API (Fetch Emails via OAuth2)  
+→ AI Service (Flask)  
+→ LLM + NLP Processing  
+→ Database (MySQL)  
+→ Backend APIs → Frontend  
+
+### Responsibilities
+
+- **Spring Boot Backend**
+  - Handles authentication, API routing, and email storage
+  - Manages Gmail sync and async processing
+
+- **AI Service (Flask)**
+  - Processes email content using LLM + NLP
+  - Returns structured output (category, priority, summary, reply)
+
+- **Database**
+  - Stores processed emails and metadata
+    
+## 🏗️ Architecture Diagram
+
+Frontend
+   ↓
+Spring Boot Backend (Java)
+   ↓
+Gmail API ←→ OAuth2 Authentication
+   ↓
+AI Service (Flask)
+   ↓
+Groq LLM + HuggingFace Model
+   ↓
+Database (MySQL)
+
 ### Backend (Spring Boot)
 - REST APIs for email operations  
 - User authentication with BCrypt encryption  
@@ -97,7 +134,24 @@ Built using a microservices architecture with a Spring Boot backend and a Flask-
 - POST `/api/email/reply/{id}`
 
 ---
+## 📡 API Example
 
+### POST /api/email/upload
+
+Request:
+{
+  "subject": "Meeting at 10 AM",
+  "content": "We have a meeting tomorrow at 10 AM",
+  "userId": 1
+}
+
+Response:
+{
+  "category": "Meeting",
+  "priority": "HIGH",
+  "summary": "Meeting scheduled for tomorrow at 10 AM",
+  "reply": "I will attend the meeting at 10 AM."
+}
 ## ⚡ Performance Optimization
 
 - Implemented caching to store analyzed emails  
@@ -115,10 +169,28 @@ Built using a microservices architecture with a Spring Boot backend and a Flask-
 ⚠️ Note: API keys should not be committed to GitHub
 
 ---
+## 🧠 Design Considerations
+
+- AI processing is separated into a microservice to allow independent scaling  
+- Backend avoids blocking calls by using async processing for Gmail sync  
+- Caching is used to handle expensive LLM operations efficiently  
+- System is designed to handle large inboxes with pagination and filtering
+
+  
+## ⚠️ Challenges Faced
+
+- Handling Gmail API pagination and large inboxes  
+- Cleaning HTML email content for AI processing  
+- Managing API rate limits for LLM calls  
+- Ensuring duplicate emails are not reprocessed  
 
 ## ▶️ How to Run
 
 ### Backend
-```bash
 cd backend
 mvn spring-boot:run
+
+### AI Service
+cd ai-service
+pip install -r requirements.txt
+python app.py
